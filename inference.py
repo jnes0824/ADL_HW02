@@ -4,11 +4,13 @@ from tqdm import tqdm
 from datasets import Dataset
 
 # Load your fine-tuned model for summarization
-summarizer = pipeline("summarization", model="./output_mt5", device=0, num_beams=4)
+summarizer = pipeline("summarization", model="./output_mt5_all_train2", device=0, num_beams=4)
 
 # Load the JSON file
-with open("./data/public.json", "r", encoding="utf-8") as file:
-    data = json.load(file)
+data = []
+with open("./data/public.jsonl", "r", encoding="utf-8") as file:
+    for line in file:
+            data.append(json.loads(line))
 
 # Convert JSON to datasets.Dataset
 dataset = Dataset.from_list(data)
@@ -16,7 +18,7 @@ dataset = Dataset.from_list(data)
 # Define a function for summarization that can be applied to each row
 def summarize_batch(batch):
     text = ["summarize: " + item for item in batch['maintext']]
-    summaries = summarizer(text, batch_size=4) 
+    summaries = summarizer(text, batch_size=2, max_length=128) 
     summary_texts = [summary['summary_text'].replace("<extra_id_0>", "").replace("<extra_id_1>", "").replace("<extra_id_2>", "") for summary in summaries]
     batch['summary'] = summary_texts
     return batch
