@@ -18,6 +18,8 @@ pip install -e tw_rouge
 10. check the dependency by running `python test.py`
 
 ## download data
+1. `mkdir data`
+1. `cd data`
 1. `pip install gdown`
 2. `gdown https://drive.google.com/uc?id=1t8QSuHXz7L9nYRrAwLQ4ponSweAp2WW_`
 3. `unzip data.zip`
@@ -47,6 +49,10 @@ accelerate launch run_summarization_no_trainer.py \
     --num_beams 4 \
     --with_tracking \
 ```
+
+## inference
+
+
 python ./ADL24-HW2/eval.py -r ./data/public.jsonl -s ./data/submission.jsonl
 
 python ./ADL24-HW2/eval.py -r ./data/public.jsonl -s ./data/summary_output4.jsonl 
@@ -70,4 +76,4 @@ python ./ADL24-HW2/eval.py -r ./data/public.jsonl -s ./data/summary_output4.json
   }
 }
 
-python infernece.py --strategy beam_search
+python inference.py --strategy beam_search

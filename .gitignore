@@ -12,5 +12,7 @@ wandb/
 *.zip
 transformers/
 *.jsonl
+!rouge_results.jsonl
 *.json
 ADL24-HW2/
+final_model/

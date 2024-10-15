@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 下載文件的 ID，從 Google Drive 分享鏈接提取
-FILE_ID="1wQBPD4Jw4WiqZeQCXFkUuyJ7r0-O8RxR"
+FILE_ID="16BZKkrA7-nsUxMjcCZS8l5PVWVc4uIZW"
 
 # 下載後的文件名稱
 FILE_NAME="model.zip"

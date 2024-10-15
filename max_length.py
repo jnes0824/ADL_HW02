@@ -39,3 +39,9 @@ print(f"平均 title 長度: {average_title_length}")
 print(f"平均 maintext 長度: {average_maintext_length}")
 print(f"最小 title 長度: {min_title_length}")
 
+# 最大 title 長度: 105
+# 最大 maintext 長度: 30435
+# 平均 title 長度: 25.68825426070935
+# 平均 maintext 長度: 1436.1695532012898
+# 最小 title 長度: 4
+
