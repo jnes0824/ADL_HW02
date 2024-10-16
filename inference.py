@@ -14,9 +14,9 @@ def parse_args():
 
 def main():
     args = parse_args()
-
+    print("Loading the model...")
     # Load your fine-tuned model for summarization
-    summarizer = pipeline("summarization", model="./output_mt5_all_train2", device=0, num_beams=4)
+    summarizer = pipeline("summarization", model="./output_mt5_all_train2", device=0, num_beams=5)
 
     # Load the JSON file
     data = []
@@ -49,3 +49,5 @@ def main():
                 'id': result_list['id'][i]
             }
             out_file.write(json.dumps(json_record, ensure_ascii=False) + "\n")  # Write each record as a line
+if __name__ == "__main__":
+    main()
