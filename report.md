@@ -85,4 +85,4 @@ accelerate launch run_summarization_no_trainer.py \
 - **Top-P**: 0.50在ROUGE評分上表現最佳
 
 #### What is your final generation strategy?
-num_beams為5，max_length=128，生成後將標點符號半形轉成全形
+num_beams為5，沒有使用其他srategy，max_length=128，生成後將標點符號半形轉成全形
