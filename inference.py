@@ -16,7 +16,7 @@ def main():
     args = parse_args()
     print("Loading the model...")
     # Load your fine-tuned model for summarization
-    summarizer = pipeline("summarization", model="./output_mt5_all_train2", device=0, num_beams=5)
+    summarizer = pipeline("summarization", model="./final_model", device=0, num_beams=5)
 
     # Load the JSON file
     data = []

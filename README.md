@@ -28,7 +28,12 @@ pip install -e tw_rouge
 1. `python convert_to_json.py`
 
 ## training
-
+1. download and login to wandb
+```
+pip install wandb
+wandb login
+```
+2. start training
 ```
 accelerate launch run_summarization_no_trainer.py \
     --model_name_or_path google/mt5-small \
@@ -44,36 +49,21 @@ accelerate launch run_summarization_no_trainer.py \
     --per_device_train_batch_size 2 \
     --gradient_accumulation_steps 2 \
     --max_source_length 2048 \
-    --output_dir ./output_mt5_all_train3 \
+    --output_dir ./model \
     --report_to wandb \
     --num_beams 4 \
     --with_tracking \
 ```
 
+## download fine tuned model
+`bash ./download.sh`
+
 ## inference
+`python ./ADL24-HW2/eval.py -r ./data/public.jsonl -s ./data/submission.jsonl`
+or
+`bash ./run.sh`
 
-
-python ./ADL24-HW2/eval.py -r ./data/public.jsonl -s ./data/submission.jsonl
-
-python ./ADL24-HW2/eval.py -r ./data/public.jsonl -s ./data/summary_output4.jsonl 
-
-
-{
-  "rouge-1": {
-    "r": 0.22306091152414545,
-    "p": 0.30466537787786435,
-    "f": 0.24968728858590156
-  },
-  "rouge-2": {
-    "r": 0.08827379198867075,
-    "p": 0.11959478259225027,
-    "f": 0.0984100110225258
-  },
-  "rouge-l": {
-    "r": 0.19924248974941808,
-    "p": 0.2710412009419996,
-    "f": 0.22247378152920008
-  }
-}
-
-python inference.py --strategy beam_search
+## generation strategy
+- 更改run_simulation.py中的strategies list，一次跑一項，多於一項會out of memory
+`python run_simulation.py --model_path model`
+- 結果在存在`rouge_results.jsonl`，以`python create_table.py ` 畫表格
