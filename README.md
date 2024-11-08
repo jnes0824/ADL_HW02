@@ -59,9 +59,10 @@ accelerate launch run_summarization_no_trainer.py \
 `bash ./download.sh`
 
 ## inference
+`bash ./run.sh ./data/public.jsonl ./data/submission.jsonl`
+
+## Eval
 `python ./ADL24-HW2/eval.py -r ./data/public.jsonl -s ./data/submission.jsonl`
-or
-`bash ./run.sh`
 
 ## generation strategy
 - 更改run_simulation.py中的strategies list，一次跑一項，多於一項會out of memory

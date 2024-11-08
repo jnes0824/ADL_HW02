@@ -56,12 +56,12 @@ def main():
     # 定義測試策略及參數組合
     strategies = [
         # {"strategy": "beam_search", "params": {"num_beams": 4}},
-        # {"strategy": "beam_search", "params": {"num_beams": 5}},
+        {"strategy": "beam_search", "params": {"num_beams": 5}},
         # {"strategy": "beam_search", "params": {"num_beams": 6}},
         # {"strategy": "top_k", "params": {"top_k": 50}},
         # {"strategy": "top_k", "params": {"top_k": 100}},
         # {"strategy": "top_p", "params": {"top_p": 0.9}},
-        {"strategy": "top_p", "params": {"top_p": 0.5}},
+        # {"strategy": "top_p", "params": {"top_p": 0.5}},
         # {"strategy": "top_p", "params": {"top_p": 0.95}},
         # {"strategy": "temperature", "params": {"temperature": 0.7}},
         # {"strategy": "temperature", "params": {"temperature": 1.2}},

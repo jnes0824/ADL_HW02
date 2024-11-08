@@ -1,9 +1,10 @@
 import json
 import argparse
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer
 from tqdm import tqdm
 from datasets import Dataset
 from convert_to_full import convert_to_fullwidth
+import torch
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Summarization with full-width conversion.")
@@ -16,7 +17,10 @@ def main():
     args = parse_args()
     print("Loading the model...")
     # Load your fine-tuned model for summarization
-    summarizer = pipeline("summarization", model="./final_model", device=0, num_beams=5)
+    model_path = "./final_model"
+    tokenizer = AutoTokenizer.from_pretrained(model_path, model_max_length=1024)
+    summarizer = pipeline("summarization", model=model_path, device=0, num_beams=5, tokenizer=tokenizer,  max_length=1024, truncation=True) 
+    # torch.cuda.set_per_process_memory_fraction(1/3, device=0)
 
     # Load the JSON file
     data = []
@@ -27,27 +31,23 @@ def main():
     # Convert JSON to datasets.Dataset
     dataset = Dataset.from_list(data)
 
-    # Define a function for summarization that can be applied to each row
-    def summarize_batch(batch):
-        text = ["summarize: " + item for item in batch['maintext']]
-        summaries = summarizer(text, batch_size=2, max_length=128) 
-        summary_texts = [convert_to_fullwidth(summary['summary_text'].replace("<extra_id_0>", "").replace("<extra_id_1>", "").replace("<extra_id_2>", "")) for summary in summaries]
-        batch['summary'] = summary_texts
-        return batch
+    output_data = []
+    for entry in tqdm(data, desc="Processing entries"):
+        # 在 maintext 欄位中加入 'summarize:' 前綴
+        text_to_summarize = "summarize: " + entry["maintext"]
+    
+        # 生成摘要
+        summary = summarizer(text_to_summarize, max_length=128, do_sample=False)[0]["summary_text"]
+        summary_text = convert_to_fullwidth(summary.replace("<extra_id_0>", "").replace("<extra_id_1>", "").replace("<extra_id_2>", ""))
+        # 建立新格式的字典並加入結果列表
+        output_data.append({
+            "title": summary_text,
+            "id": entry["id"]
+        })
 
-    # Apply the summarization function to the dataset in batches
-    result_dataset = dataset.map(summarize_batch, batched=True, batch_size=2)
-
-    # Convert the result dataset to list of dictionaries for saving in jsonl format
-    result_list = result_dataset.to_dict()
-
-    # Save the summaries back to a JSONL file (one JSON object per line)
-    with open(args.output_path, "w", encoding="utf-8") as out_file:
-        for i in range(len(result_list['summary'])):
-            json_record = {
-                'title': result_list['summary'][i], 
-                'id': result_list['id'][i]
-            }
-            out_file.write(json.dumps(json_record, ensure_ascii=False) + "\n")  # Write each record as a line
+    # 將結果寫入 JSONL 文件
+    with open(args.output_path, "w", encoding="utf-8") as f:
+        for item in output_data:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
 if __name__ == "__main__":
     main()
